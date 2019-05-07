@@ -65,7 +65,13 @@ class StudentController extends Controller
 
     public function delete(Request $request, $id)
     {
+        $studentClass = DB::table('student_class')->where('student_id', $id)->first();
         $model = Student::find($id);
+        
+        if($studentClass !== null){
+            return redirect(\URL::previous())->withInput($request->all())->withErrors(['errorMessage' => $model->name.' students cannot be deleted because they assigned in the class!']);
+        }
+
         $model->delete();
         
         $request->session()->flash('successMessage', 'Student '.$model->name.' successfully deleted');

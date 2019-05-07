@@ -80,7 +80,9 @@ class ClassController extends Controller
     public function delete(Request $request, $id)
     {
         $model = ClassModel::find($id);
+        $model->studentClass()->delete();
         $model->delete();
+
         
         $request->session()->flash('successMessage', 'Class '.$model->name.' successfully deleted');
 

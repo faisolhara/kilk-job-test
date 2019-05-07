@@ -65,7 +65,13 @@ class TeacherController extends Controller
 
     public function delete(Request $request, $id)
     {
+
+        $class = DB::table('class')->where('teacher_id', $id)->first();
         $model = Teacher::find($id);
+
+        if($class !== null){
+            return redirect(\URL::previous())->withInput($request->all())->withErrors(['errorMessage' => $model->name.' teachers cannot be deleted because they assigned in the class!']);
+        }
         $model->delete();
         
         $request->session()->flash('successMessage', 'Teacher '.$model->name.' successfully deleted');
